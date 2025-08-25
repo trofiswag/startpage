@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:,">
+    <title>New Tab</title>
+    <style>
+      html, body {
+    height: 100%; /* Make sure body takes full viewport height */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  } 
+      body {
+        background-color: #0e0e0e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Montserrat", sans-serif;
+        overflow: hidden;
+      }
+      .weather {
+        text-align: center;
+        color: white;
+        font-family: "Montserrat", sans-serif;      
+      }
+      .basiccontainer {
+        height: 30px;
+        border-radius: 15px;
+        font-size: 25px;
+        background-color: transparent;
+        padding: 7px;
+        border: 10px solid #070707;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 20px;
+        font-family: "Montserrat", sans-serif;
+      }
+      
+      .squarecontainer {
+        height: 50px;
+        width: 50px;
+        border-radius: 15px;
+        font-size: 25px;
+        background-color: transparent;
+        padding: 7px;
+        border: 10px solid #070707;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 20px;
+        font-family: "Montserrat", sans-serif;
+      }
+      .nothing {
+      border: none;
+      background-color: transparent;
+      color: #0e0e0e;
+      font-family: "Montserrat", sans-serif;
+      }
+.button {
+  background-color: transparent; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+.searchengineselect {
+ background-color: #1a1a1a;
+ padding: 10px;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+}
+.info {
+  position: absolute;
+  top: 1%;
+  left: 0.5%;
+  color: gray;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 125%;
+}
+    </style>
+  </head>
+  <body> 
+   <div class="weather">
+<div style="font-size: 150%; left: 25px;" id="textshower"></div>
+<input type="text" spellcheck="false" onkeypress="updatetext()" onkeyup="updatetext()" onkeydown="updatetext()" class="nothing" id="writtenstuff"></input>
+    </div>
+    <script>
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+let engine = 1;
+if (localStorage.default) {
+    engine = parseInt(localStorage.default);
+}
+const written = document.getElementById("writtenstuff");
+if (localStorage.keywords == undefined) {
+    const keywords = [];
+    localStorage.setItem("keywords", JSON.stringify(keywords));
+}
+if (localStorage.engines == undefined) {
+    const google = ["google", "https://www.google.com/search?q=%s"];
+    const ddg = ["duckduckgo", "https://duckduckgo.com/?q=%s"];
+    const bing = ["bing", "https://www.bing.com/search?q=%s"];
+    const engines = [JSON.stringify(google), JSON.stringify(ddg), JSON.stringify(bing)];
+    localStorage.setItem("engines", JSON.stringify(engines));
+}
+document.addEventListener("visibilitychange", function() {
+    written.value = "";
+    document.getElementById("textshower").innerText = "";
+});
+const engines = JSON.parse(localStorage.engines);
+const keywords = JSON.parse(localStorage.keywords);
+written.focus();
+
+function search() {
+    if (written.value.substring(0, 8) == "default ") {
+        for (let i = 0; i < engines.length; i++) {
+            const enginedata = JSON.parse(engines[i]);
+            if (written.value.substring(8, written.value.length) == enginedata[0]) {
+                localStorage.setItem("default", i);
+                written.value = "";
+                document.getElementById("textshower").innerText = "";
+                return;
+            }
+        }
+    }
+    for (let i = 0; i < keywords.length; i++) {
+        const keyworddata = JSON.parse(keywords[i]);
+        if (written.value == keyworddata[0]) {
+            window.location.href = keyworddata[1];
+            return;
+        }
+    }
+    for (let i = 0; i < engines.length; i++) {
+        const enginedata = JSON.parse(engines[i]);
+        if (written.value == enginedata[0]) {
+            engine = i;
+            written.value = "";
+            return;
+        }
+    }
+    if (written.value.substring(0, 12) == "add keyword ") {
+        keywords.push(JSON.stringify(written.value.substring(12, written.value.length).split(" ")));
+        localStorage.setItem("keywords", JSON.stringify(keywords));
+        written.value = "";
+        return;
+    }
+    if (written.value.substring(0, 15) == "remove keyword ") {
+        let found = "false";
+        for (let i = 0; found == "false"; i++) {
+            const keyworddata = JSON.parse(keywords[i]);
+            if (keyworddata.includes(written.value.substring(15, written.value.length))) {
+                found = "true";
+                keywords.splice(i, i);
+                written.value = "";
+                localStorage.setItem("keywords", JSON.stringify(keywords));
+                return;
+            }
+            if (i < keywords.length) {
+                return;
+            }
+        }
+    }
+    if (written.value.substring(0, 11) == "add engine ") {
+        engines.push(JSON.stringify(written.value.substring(11, written.value.length).split(" ")));
+        localStorage.setItem("engines", JSON.stringify(engines));
+        written.value = "";
+        return;
+    }
+    if (written.value.substring(0, 4) == "web ") {
+        window.location.href = "https://" + written.value.substring(4, written.value.length);
+        written.value = "";
+        return;
+    }
+    if (written.value == "keywords") {
+        written.value = "keywords: ";
+        for (let i = 0; i < keywords.length; i++) {
+            keyworddata = JSON.parse(keywords[i]);
+            written.value += keyworddata[0] + ", ";
+        }
+        return;
+    }
+    const enginedata = JSON.parse(engines[engine]);
+    window.location.href = enginedata[1].replace("%s", written.value);
+}
+document.addEventListener("keydown", function(event) {
+    document.getElementById("writtenstuff").focus();
+    console.log(event.key + " " + event.keyCode);
+    if (event.key === "Enter") {
+        event.preventDefault();
+        search();
+    }
+});
+
+function updatetext() {
+    document.getElementById("textshower").innerText = written.value;
+    if (written.value.includes("keywords: ")) {
+        written.value = "";
+    }
+}
+    </script>
+  </body>
+</html>
