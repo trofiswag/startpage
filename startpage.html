@@ -112,11 +112,23 @@ if (localStorage.engines == undefined) {
 }
 document.addEventListener("visibilitychange", function () {
 written.value = "";
+ document.getElementById("textshower").innerText = "";
 });
 const engines = JSON.parse(localStorage.engines);
 const keywords = JSON.parse(localStorage.keywords);
       written.focus();
       function search() {
+      if (written.value.substring(0, 8) == "default ") {
+        for (let i = 0; i < engines.length; i++) {
+          const enginedata = JSON.parse(engines[i]);
+          if (written.value.substring(8, written.value.length) == enginedata[0]) {
+           localStorage.setItem("default", i);
+           written.value = "";
+           document.getElementById("textshower").innerText = "";
+           return;
+          }
+        }
+        }
         for (let i = 0; i < keywords.length; i++) {
           const keyworddata = JSON.parse(keywords[i]);
           if (written.value == keyworddata[0]) {
