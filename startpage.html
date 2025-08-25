@@ -145,8 +145,6 @@ const keywords = JSON.parse(localStorage.keywords);
           if (written.value == keyworddata[0]) {
            window.location.href = keyworddata[1];
            return;
-          } else {
-            console.log("no matches");
           }
         }
         for (let i = 0; i < engines.length; i++) {
@@ -155,8 +153,6 @@ const keywords = JSON.parse(localStorage.keywords);
            engine = i;
            written.value = "";
            return;
-          } else {
-            console.log("no matches");
           }
         }
       if (written.value.substring(0, 12) == "add keyword ") {     
