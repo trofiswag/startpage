@@ -1,12 +1,13 @@
-If you want to look at the code, don't
+### Commands:<br>
+<hr>
 
-All commands:<br>
-add keyword [keyword] [link] - add a keyword that takes you to a link (max 1 word)<br>
-remove keyword [keyword] - remove a keyword<br>
-keywords - see all made keywords<br>
-add engine [keyword] <link> - add a search engine (max 1 word) (put %s in place of the query)<br>
-web [link] - go to a website (domain only)<br>
-default [search engine] - sets the default search engine<br>
-[search engine] - switch current engine to a different search engine<br>
+``` add keyword [keyword] [link with a protocol] ``` - add a keyword that takes you to a link (max 1 word)<br>
+``` remove keyword [keyword] ``` - remove a keyword<br>
+``` keywords ``` - see all available keywords<br>
+``` add engine [engine] [link] ``` - add a search engine<br>
+``` remove engine [engine] ``` - remove a search engine<br>
+``` engines ``` - see all available engines<br>
+``` web [link without a protocol] ``` - go to a website<br>
+``` default [engine] ``` - see all available keywords<br>
+``` [engine] ``` - switch current search engine being used<br>
 
-Base search engines are: google, duckduckgo, bing
