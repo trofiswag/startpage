@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:,">
+    <link rel="icon" id="favicon" href="favicon/1.png">
     <title>New Tab</title>
     <style>
       html, body {
@@ -106,6 +106,7 @@ button:focus {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+let displayingtext = false;
 let engine = 1;
 if (localStorage.default) {
     engine = parseInt(localStorage.default);
@@ -130,7 +131,7 @@ const engines = JSON.parse(localStorage.engines);
 const keywords = JSON.parse(localStorage.keywords);
 written.focus();
 
-function search() {
+async function search() {
     if (written.value.substring(0, 8) == "default ") {
         for (let i = 0; i < engines.length; i++) {
             const enginedata = JSON.parse(engines[i]);
@@ -180,6 +181,19 @@ function search() {
             }
         }
     }
+    if (written.value.substring(0, 14) == "remove engine ") {
+        let found = "false";
+        for (let i = 0; i < engines.length; i++) {
+            const enginedata = JSON.parse(engines[i]);
+            if (enginedata.includes(written.value.substring(14, written.value.length))) {
+                found = "true";
+                engines.splice(i, i);
+                written.value = "";
+                localStorage.setItem("engines", JSON.stringify(engines));
+                return;
+            }
+        }
+    }
     if (written.value.substring(0, 11) == "add engine ") {
         engines.push(JSON.stringify(written.value.substring(11, written.value.length).split(" ")));
         localStorage.setItem("engines", JSON.stringify(engines));
@@ -192,10 +206,28 @@ function search() {
         return;
     }
     if (written.value == "keywords") {
+        await sleep(500);
+        displayingtext = true;
         written.value = "keywords: ";
+        const textshow = document.getElementById("textshower").innerText;
+        written.setSelectionRange(textshow.length, textshow.length);
         for (let i = 0; i < keywords.length; i++) {
             keyworddata = JSON.parse(keywords[i]);
             written.value += keyworddata[0] + ", ";
+            written.setSelectionRange(textshow.length, textshow.length);
+        }
+        return;
+    }
+        if (written.value == "engines") {
+        await sleep(500);
+        displayingtext = true;
+        written.value = "engines: ";
+        const textshow = document.getElementById("textshower").innerText;
+        written.setSelectionRange(textshow.length, textshow.length);
+        for (let i = 0; i < engines.length; i++) {
+            const enginedata2 = JSON.parse(engines[i]);
+            written.value += enginedata2[0] + ", ";
+            written.setSelectionRange(textshow.length, textshow.length);
         }
         return;
     }
@@ -204,30 +236,44 @@ function search() {
 }
 document.addEventListener("keydown", function(event) {
     document.getElementById("writtenstuff").focus();
-    console.log(event.key + " " + event.keyCode);
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && displayingtext == false) {
         event.preventDefault();
         search();
     }
-});
-
-function updatetext() {
-    document.getElementById("textshower").innerText = written.value;
-    if (written.value.includes("keywords: ")) {
+    if (displayingtext == true) {
+        displayingtext = false;
         written.value = "";
+        return;
     }
+});
+function updatetext() {
+    document.getElementById("textshower").innerText = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart);
 }
+const favicon = document.getElementById("favicon");
 async function insertcursor() {
-    const normal = written.value;
-    written.value = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart, written.value.length);
-    document.getElementById("textshower").innerText = written.value;
+    nextframe();
+    const cursorposition = written.selectionStart;
+    document.getElementById("textshower").innerText = written.value.slice(0, cursorposition) + "|" + written.value.slice(cursorposition);
     await sleep(500);
-    written.value = normal;
+    nextframe();
     document.getElementById("textshower").innerText = written.value;
     setTimeout(insertcursor, 500);
 }
+     function nextframe() {
+        if (favicon.href.endsWith("favicon/1.png")) {
+            favicon.href = "favicon/2.png";
+        } else {
+            favicon.href = "favicon/1.png";
+        }
+    }
 insertcursor();
-
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const query = urlParams.get("q");
+if (query != null) {
+    written.value = urlParams.get("q");
+    search();
+}
     </script>
   </body>
 </html>
