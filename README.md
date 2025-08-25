@@ -1,3 +1,5 @@
+If you want to look at the code, don't
+
 All commands:
 add keyword <keyword> <link> - add a keyword that brings to a link
 remove keyword <keyword> - remove a keyword
