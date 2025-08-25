@@ -160,7 +160,6 @@ const keywords = JSON.parse(localStorage.keywords);
           }
         }
       if (written.value.substring(0, 12) == "add keyword ") {     
-        keywords.indexOf(written.value);
         localStorage.setItem("keywords", JSON.stringify(keywords));
         written.value = "";
         return;
