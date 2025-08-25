@@ -1,5 +1,6 @@
 ### Commands:<br>
 <hr>
+Arguments have to be only one word<br>
 
 ``` add keyword [keyword] [link with a protocol] ``` - add a keyword that takes you to a link (max 1 word)<br>
 ``` remove keyword [keyword] ``` - remove a keyword<br>
