@@ -41,6 +41,7 @@
         padding: 20px;
         font-family: "Montserrat", sans-serif;
       }
+      
       .squarecontainer {
         height: 50px;
         width: 50px;
@@ -82,6 +83,16 @@ button:focus {
  top: 50%;
  left: 50%;
  transform: translate(-50%, -50%);
+}
+.info {
+  position: absolute;
+  top: 1%;
+  left: 0.5%;
+  color: gray;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 125%;
 }
     </style>
   </head>
@@ -148,11 +159,27 @@ const keywords = JSON.parse(localStorage.keywords);
             console.log("no matches");
           }
         }
-      if (written.value.substring(0, 12) == "add keyword ") {
-        keywords.push(JSON.stringify(written.value.substring(12, written.value.length).split(" ")));
+      if (written.value.substring(0, 12) == "add keyword ") {     
+        keywords.indexOf(written.value);
         localStorage.setItem("keywords", JSON.stringify(keywords));
         written.value = "";
         return;
+      }
+      if (written.value.substring(0, 15) == "remove keyword ") {
+        let found = "false";
+        for (let i = 0; found == "false"; i++) {
+        const keyworddata = JSON.parse(keywords[i]);
+        if (keyworddata.includes(written.value.substring(15, written.value.length))) {
+        found = "true";
+        keywords.splice(i, i);
+        written.value = "";
+        localStorage.setItem("keywords", JSON.stringify(keywords));
+        return;
+        } 
+        if (i < keywords.length) {
+          return;
+        }
+        }
       }
       if (written.value.substring(0, 11) == "add engine ") {
         engines.push(JSON.stringify(written.value.substring(11, written.value.length).split(" ")));
@@ -163,6 +190,14 @@ const keywords = JSON.parse(localStorage.keywords);
       if (written.value.substring(0, 4) == "web ") {
         window.location.href = "https://" + written.value.substring(4, written.value.length);
         written.value = "";
+        return;
+      }
+      if (written.value == "keywords") {
+        written.value = "keywords: ";
+        for (let i = 0; i < keywords.length; i++) {
+          keyworddata = JSON.parse(keywords[i]);
+          written.value += keyworddata[0] + ", ";
+        }
         return;
       }
       const enginedata = JSON.parse(engines[engine]);
@@ -177,7 +212,10 @@ const keywords = JSON.parse(localStorage.keywords);
       }
       });
       function updatetext() {
-        document.getElementById("textshower").innerText = document.getElementById("writtenstuff").value;
+        document.getElementById("textshower").innerText = written.value;
+        if (written.value.includes("keywords: ")) {
+        written.value = "";
+        }
       }
     </script>
   </body>
