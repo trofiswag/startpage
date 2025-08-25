@@ -158,6 +158,7 @@ function search() {
         }
     }
     if (written.value.substring(0, 12) == "add keyword ") {
+        written.selectionStart
         keywords.push(JSON.stringify(written.value.substring(12, written.value.length).split(" ")));
         localStorage.setItem("keywords", JSON.stringify(keywords));
         written.value = "";
@@ -216,6 +217,17 @@ function updatetext() {
         written.value = "";
     }
 }
+async function insertcursor() {
+    const normal = written.value;
+    written.value = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart, written.value.length);
+    document.getElementById("textshower").innerText = written.value;
+    await sleep(500);
+    written.value = normal;
+    document.getElementById("textshower").innerText = written.value;
+    setTimeout(insertcursor, 500);
+}
+insertcursor();
+
     </script>
   </body>
 </html>
