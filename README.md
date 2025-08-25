@@ -1,4 +1,7 @@
-### Commands:<br>
+<hr>
+<div><img src="favicon/favicon.gif" width=100></div>
+<hr>
+Commands:<br>
 <hr>
 Arguments have to be only one word<br>
 
