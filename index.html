@@ -135,7 +135,8 @@ written.focus();
 async function search() {
     if (written.value.substring(0, 7) == "ignore ") {
     const enginedatas = JSON.parse(engines[engine]);
-    window.location.href = enginedatas[1].replace("%s", written.value);
+    window.location.href = enginedatas[1].replace("%s", written.value.substring(7, written.value.length));
+    return;
     }
     if (written.value.substring(0, 8) == "default ") {// default
         for (let i = 0; i < engines.length; i++) { 
