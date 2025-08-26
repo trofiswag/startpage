@@ -132,8 +132,8 @@ const keywords = JSON.parse(localStorage.keywords);
 written.focus();
 
 async function search() {
-    if (written.value.substring(0, 8) == "default ") {
-        for (let i = 0; i < engines.length; i++) {
+    if (written.value.substring(0, 8) == "default ") {// default
+        for (let i = 0; i < engines.length; i++) { 
             const enginedata = JSON.parse(engines[i]);
             if (written.value.substring(8, written.value.length) == enginedata[0]) {
                 localStorage.setItem("default", i);
@@ -143,14 +143,14 @@ async function search() {
             }
         }
     }
-    for (let i = 0; i < keywords.length; i++) {
+    for (let i = 0; i < keywords.length; i++) { // keyword
         const keyworddata = JSON.parse(keywords[i]);
         if (written.value == keyworddata[0]) {
             window.location.href = keyworddata[1];
             return;
         }
     }
-    for (let i = 0; i < engines.length; i++) {
+    for (let i = 0; i < engines.length; i++) { // change engine
         const enginedata = JSON.parse(engines[i]);
         if (written.value == enginedata[0]) {
             engine = i;
@@ -158,14 +158,27 @@ async function search() {
             return;
         }
     }
-    if (written.value.substring(0, 12) == "add keyword ") {
+    for (let i = 0; i < engines.length; i++) { // engine query
+        const enginedata = JSON.parse(engines[i]);
+        const writtennow = written.value.split(" ");
+        let query = "";
+        if (written.value.split(" ")[0] == enginedata[0] && written.value.split(" ").length > 1) {
+            engine = i;
+            for (let i = 1; i < writtennow.length; i++) {
+            query += writtennow[i] + " ";
+            }
+            window.location.href = enginedata[1].replace("%s", query);
+            return;
+        }
+    }
+    if (written.value.substring(0, 12) == "add keyword ") { // add keyword
         written.selectionStart
         keywords.push(JSON.stringify(written.value.substring(12, written.value.length).split(" ")));
         localStorage.setItem("keywords", JSON.stringify(keywords));
         written.value = "";
         return;
     }
-    if (written.value.substring(0, 15) == "remove keyword ") {
+    if (written.value.substring(0, 15) == "remove keyword ") { // remove keyword
         let found = "false";
         for (let i = 0; found == "false"; i++) {
             const keyworddata = JSON.parse(keywords[i]);
@@ -206,7 +219,7 @@ async function search() {
         return;
     }
     if (written.value == "keywords") {
-        await sleep(500);
+        await sleep(200);
         displayingtext = true;
         written.value = "keywords: ";
         const textshow = document.getElementById("textshower").innerText;
@@ -219,7 +232,7 @@ async function search() {
         return;
     }
         if (written.value == "engines") {
-        await sleep(500);
+        await sleep(200);
         displayingtext = true;
         written.value = "engines: ";
         const textshow = document.getElementById("textshower").innerText;
