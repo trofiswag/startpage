@@ -23,5 +23,6 @@ Keywords and search engines have to be only one word<br>
 ``` web [link without a protocol] ``` - Go to a website<br>
 ``` default [engine] ``` - See all available keywords<br>
 ``` [engine] ``` - Switch current search engine being used<br>
-``` [engine] [query] ``` - Search with the provided search engine 
+``` [engine] [query] ``` - Search with the provided search engine<br>
+``` ignore [query] ``` - Ignore any commands and just search the query
 
