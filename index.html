@@ -99,7 +99,8 @@ button:focus {
   </head>
   <body> 
    <div class="weather">
-<div style="font-size: 150%; left: 25px;" id="textshower"></div>
+<div style="font-size: 150%; left: 25px;" id="textshower"></div><br>
+<div style="font-size: 150%; color: gray; left: 25px;" id="outputshower"></div>
 <input type="text" spellcheck="false" onkeypress="updatetext()" onkeyup="updatetext()" onkeydown="updatetext()" class="nothing" id="writtenstuff"></input>
     </div>
     <script>
@@ -132,6 +133,10 @@ const keywords = JSON.parse(localStorage.keywords);
 written.focus();
 
 async function search() {
+    if (written.value.substring(0, 7) == "ignore ") {
+    const enginedatas = JSON.parse(engines[engine]);
+    window.location.href = enginedatas[1].replace("%s", written.value);
+    }
     if (written.value.substring(0, 8) == "default ") {// default
         for (let i = 0; i < engines.length; i++) { 
             const enginedata = JSON.parse(engines[i]);
@@ -218,32 +223,6 @@ async function search() {
         written.value = "";
         return;
     }
-    if (written.value == "keywords") {
-        await sleep(200);
-        displayingtext = true;
-        written.value = "keywords: ";
-        const textshow = document.getElementById("textshower").innerText;
-        written.setSelectionRange(textshow.length, textshow.length);
-        for (let i = 0; i < keywords.length; i++) {
-            keyworddata = JSON.parse(keywords[i]);
-            written.value += keyworddata[0] + ", ";
-            written.setSelectionRange(textshow.length, textshow.length);
-        }
-        return;
-    }
-        if (written.value == "engines") {
-        await sleep(200);
-        displayingtext = true;
-        written.value = "engines: ";
-        const textshow = document.getElementById("textshower").innerText;
-        written.setSelectionRange(textshow.length, textshow.length);
-        for (let i = 0; i < engines.length; i++) {
-            const enginedata2 = JSON.parse(engines[i]);
-            written.value += enginedata2[0] + ", ";
-            written.setSelectionRange(textshow.length, textshow.length);
-        }
-        return;
-    }
     const enginedata = JSON.parse(engines[engine]);
     window.location.href = enginedata[1].replace("%s", written.value);
 }
@@ -259,8 +238,37 @@ document.addEventListener("keydown", function(event) {
         return;
     }
 });
-function updatetext() {
+async function updatetext() {
     document.getElementById("textshower").innerText = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart);
+      if (written.value != "keywords" && written.value != "engines") {
+    document.getElementById("outputshower").innerText = "";
+  }
+    if (written.value == "engines") {
+        document.getElementById("outputshower").innerText = "";
+        const textshow = document.getElementById("outputshower");
+        for (let i = 0; i < engines.length; i++) {
+            const enginedata2 = JSON.parse(engines[i]);
+            if (i == engines.length - 1) {
+            textshow.innerText += enginedata2[0];
+            } else {
+            textshow.innerText += enginedata2[0] + ", ";
+            }
+    }
+    return;
+}
+    if (written.value == "keywords") {
+        document.getElementById("outputshower").innerText = "";
+        const textshow2 = document.getElementById("outputshower");  
+        for (let i = 0; i < keywords.length; i++) {
+            keyworddata = JSON.parse(keywords[i]);
+            if (i == keywords.length - 1) {
+            textshow2.innerText += keyworddata[0];
+            } else {
+            textshow2.innerText += keyworddata[0] + ", ";  
+            }
+        }
+        return;
+}
 }
 const favicon = document.getElementById("favicon");
 async function insertcursor() {
