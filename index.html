@@ -187,28 +187,21 @@ async function search() {
         return;
     }
     if (written.value.substring(0, 15) == "remove keyword ") { // remove keyword
-        let found = false;
-        for (let i = 0; found == false; i++) {
+        for (let i = 0; i < keywords.length; i++) {
             const keyworddata = JSON.parse(keywords[i]);
             if (keyworddata.includes(written.value.substring(15, written.value.length))) {
-                found = true;
                 keywords.splice(i, 1);
                 written.value = "";
                 localStorage.setItem("keywords", JSON.stringify(keywords));
                 return;
             }
-            if (i < keywords.length + 1) {
-                return;
-            }
         }
     }
     if (written.value.substring(0, 14) == "remove engine ") {
-        let found = "false";
         for (let i = 0; i < engines.length; i++) {
             const enginedata = JSON.parse(engines[i]);
             if (enginedata.includes(written.value.substring(14, written.value.length))) {
-                found = "true";
-                engines.splice(i, i);
+                engines.splice(i, 1);
                 written.value = "";
                 localStorage.setItem("engines", JSON.stringify(engines));
                 return;
