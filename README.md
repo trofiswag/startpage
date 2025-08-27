@@ -14,6 +14,7 @@ Commands:<br>
 <hr>
 Keywords and search engines have to be only one word<br>
 
+``` help [category] ``` - See all commands nicely categorized (categories are keywords, engines and other)<br>
 ``` add keyword [keyword] [link with a protocol] ``` - Add a keyword that takes you to a link <br>
 ``` remove keyword [keyword] ``` - Remove a keyword<br>
 ``` keywords ``` - See all available keywords<br>
