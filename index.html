@@ -187,17 +187,21 @@ async function search() {
         return;
     }
     if (written.value.substring(0, 15) == "remove keyword ") { // remove keyword
-        let found = "false";
-        for (let i = 0; found == "false"; i++) {
+        let found = false;
+        for (let i = 0; found == false; i++) {
             const keyworddata = JSON.parse(keywords[i]);
             if (keyworddata.includes(written.value.substring(15, written.value.length))) {
-                found = "true";
-                keywords.splice(i, i);
+                found = true;
+                console.log("found something")
+                keywords.splice(i, 1);
                 written.value = "";
                 localStorage.setItem("keywords", JSON.stringify(keywords));
                 return;
             }
-            if (i < keywords.length) {
+            if (i < keywords.length + 1) {
+                if (found == false) {
+                    console.log("Didnt find anything")
+                }
                 return;
             }
         }
