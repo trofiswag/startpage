@@ -192,16 +192,12 @@ async function search() {
             const keyworddata = JSON.parse(keywords[i]);
             if (keyworddata.includes(written.value.substring(15, written.value.length))) {
                 found = true;
-                console.log("found something")
                 keywords.splice(i, 1);
                 written.value = "";
                 localStorage.setItem("keywords", JSON.stringify(keywords));
                 return;
             }
             if (i < keywords.length + 1) {
-                if (found == false) {
-                    console.log("Didnt find anything")
-                }
                 return;
             }
         }
