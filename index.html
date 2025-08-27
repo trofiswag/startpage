@@ -113,6 +113,7 @@ if (localStorage.default) {
     engine = parseInt(localStorage.default);
 }
 const written = document.getElementById("writtenstuff");
+const textshow = document.getElementById("outputshower");
 if (localStorage.keywords == undefined) {
     const keywords = [];
     localStorage.setItem("keywords", JSON.stringify(keywords));
@@ -127,6 +128,7 @@ if (localStorage.engines == undefined) {
 document.addEventListener("visibilitychange", function() {
     written.value = "";
     document.getElementById("textshower").innerText = "";
+    textshow.innerHTML = "";
 });
 const engines = JSON.parse(localStorage.engines);
 const keywords = JSON.parse(localStorage.keywords);
@@ -241,12 +243,9 @@ document.addEventListener("keydown", function(event) {
 });
 async function updatetext() {
     document.getElementById("textshower").innerText = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart);
-      if (written.value != "keywords" && written.value != "engines") {
     document.getElementById("outputshower").innerText = "";
-  }
+  
     if (written.value == "engines") {
-        document.getElementById("outputshower").innerText = "";
-        const textshow = document.getElementById("outputshower");
         for (let i = 0; i < engines.length; i++) {
             const enginedata2 = JSON.parse(engines[i]);
             if (i == engines.length - 1) {
@@ -258,15 +257,31 @@ async function updatetext() {
     return;
 }
     if (written.value == "keywords") {
-        document.getElementById("outputshower").innerText = "";
-        const textshow2 = document.getElementById("outputshower");  
         for (let i = 0; i < keywords.length; i++) {
             keyworddata = JSON.parse(keywords[i]);
             if (i == keywords.length - 1) {
-            textshow2.innerText += keyworddata[0];
+            textshow.innerText += keyworddata[0];
             } else {
-            textshow2.innerText += keyworddata[0] + ", ";  
+            textshow.innerText += keyworddata[0] + ", ";  
             }
+        }
+        return;
+}
+if (written.value == "help" || written.value == "help ") {
+    textshow.innerText = "Specify a category that is keywords, engines or other";
+}
+    if (written.value.substring(0, 5) == "help ") {
+        if (written.value.substring(5, written.value.length) == "keywords") {
+            textshow.innerHTML = "add keyword [keyword] [link] - add a keyword<br>remove keyword [keyword] - remove a keyword<br>keywords - see all available keywords<br>[keyword] - use a keyword";
+            return;
+        }
+        if (written.value.substring(5, written.value.length) == "engines") {
+            textshow.innerHTML = "add engine [search engine] [link with %s in place of the query] - add a search engine<br>remove engine [search engine] - remove a search engine<br>default [engine] - set your default search engine<br>[engine] [query] - search with a search engine<br>[engine] - switch your current search engine<br>engines - see all available search engines";
+            return;
+        }
+        if (written.value.substring(5, written.value.length) == "other") {
+            textshow.innerHTML = "web [website domain] - go to a website<br>ignore [query] - search the query and ignore all commands";
+            return;
         }
         return;
 }
