@@ -5,6 +5,7 @@ Features:<br>
 <hr>
 - Keywords to quickly get to a website<br>
 - Go to links without having to use the address bar<br>
+- Easily add any search engine you want<br>
 - Quickly search with different search engines<br>
 - Use as a search engine on your browser by entering 
 
