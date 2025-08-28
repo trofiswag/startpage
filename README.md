@@ -24,7 +24,9 @@ Keywords and search engines have to be only one word<br>
 ``` engines ``` - See all available engines<br>
 ``` web [link without a protocol] ``` - Go to a website<br>
 ``` default [engine] ``` - See all available keywords<br>
-``` [engine] ``` - Switch current search engine being used<br>
+``` [engine] ``` - Switch the current search engine being used<br>
 ``` [engine] [query] ``` - Search with the provided search engine<br>
-``` ignore [query] ``` - Ignore any commands and just search the query
+``` ignore [query] ``` - Ignore any commands and just search the query<br>
+``` text/bg/output [css color name or hex code] ``` - change the text, background or command output color<br>
+``` text/bg/output default ``` - set the text, background or command output color to the default
 
