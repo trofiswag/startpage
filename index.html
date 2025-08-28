@@ -125,6 +125,10 @@ if (localStorage.engines == undefined) {
     const engines = [JSON.stringify(google), JSON.stringify(ddg), JSON.stringify(bing)];
     localStorage.setItem("engines", JSON.stringify(engines));
 }
+if (localStorage.colors == undefined) {
+    const colors = ["#0e0e0e", "white", "gray"];
+    localStorage.setItem("colors", JSON.stringify(colors));
+}
 document.addEventListener("visibilitychange", function() {
     written.value = "";
     document.getElementById("textshower").innerText = "";
@@ -132,10 +136,15 @@ document.addEventListener("visibilitychange", function() {
 });
 const engines = JSON.parse(localStorage.engines);
 const keywords = JSON.parse(localStorage.keywords);
+const colors = JSON.parse(localStorage.colors);
+written.style.color = colors[0];
+document.body.style.backgroundColor = colors[0];
+document.getElementById("textshower").style.color = colors[1];
+document.getElementById("outputshower").style.color = colors[2];
 written.focus();
 
 async function search() {
-    if (written.value.substring(0, 7) == "ignore ") {
+    if (written.value.substring(0, 7) == "ignore ") { //ignore 
     const enginedatas = JSON.parse(engines[engine]);
     window.location.href = enginedatas[1].replace("%s", written.value.substring(7, written.value.length));
     return;
@@ -197,7 +206,7 @@ async function search() {
             }
         }
     }
-    if (written.value.substring(0, 14) == "remove engine ") {
+    if (written.value.substring(0, 14) == "remove engine ") { // remove engine
         for (let i = 0; i < engines.length; i++) {
             const enginedata = JSON.parse(engines[i]);
             if (enginedata.includes(written.value.substring(14, written.value.length))) {
@@ -208,16 +217,60 @@ async function search() {
             }
         }
     }
-    if (written.value.substring(0, 11) == "add engine ") {
+    if (written.value.substring(0, 11) == "add engine ") { // add engine
         engines.push(JSON.stringify(written.value.substring(11, written.value.length).split(" ")));
         localStorage.setItem("engines", JSON.stringify(engines));
         written.value = "";
         return;
     }
-    if (written.value.substring(0, 4) == "web ") {
+    if (written.value.substring(0, 4) == "web ") { // web
         window.location.href = "https://" + written.value.substring(4, written.value.length);
         written.value = "";
         return;
+    }
+    if (written.value.substring(0, 3) == "bg ") { // bg color
+    if (written.value == "bg default") {
+    document.body.style.backgroundColor = written.value.substring(3, written.value.length);
+    written.style.color = "#0e0e0e";
+    colors[0] = "#0e0e0e"
+    localStorage.setItem("colors", JSON.stringify(colors));
+    written.value = "";
+    return; 
+    }
+    document.body.style.backgroundColor = written.value.substring(3, written.value.length);
+    written.style.color = written.value.substring(3, written.value.length);
+    colors[0] = written.value.substring(3, written.value.length); 
+    localStorage.setItem("colors", JSON.stringify(colors));
+    written.value = "";
+    return;
+    }
+    if (written.value.substring(0, 5) == "text ") { // text color
+    if (written.value == "text default") {
+    document.getElementById("textshower").style.color = "white"
+    colors[1] = "white";
+    localStorage.setItem("colors", JSON.stringify(colors));
+    written.value = "";
+    return; 
+    }
+    document.getElementById("textshower").style.color = written.value.substring(5, written.value.length);
+    colors[1] = written.value.substring(5, written.value.length); 
+    localStorage.setItem("colors", JSON.stringify(colors));
+    written.value = "";
+    return;
+    }
+    if (written.value.substring(0, 7) == "output ") { // output color
+        if (written.value == "output default") {
+            document.getElementById("outputshower").style.color = "gray";
+            colors[2] = "gray";
+            localStorage.setItem("colors", JSON.stringify(colors));
+            written.value = "";
+            return;
+        }
+    document.getElementById("outputshower").style.color = written.value.substring(7, written.value.length);
+    colors[2] = written.value.substring(7, written.value.length); 
+    localStorage.setItem("colors", JSON.stringify(colors));
+    written.value = "";
+    return;
     }
     const enginedata = JSON.parse(engines[engine]);
     window.location.href = enginedata[1].replace("%s", written.value);
@@ -242,9 +295,9 @@ async function updatetext() {
         for (let i = 0; i < engines.length; i++) {
             const enginedata2 = JSON.parse(engines[i]);
             if (i == engines.length - 1) {
-            textshow.innerText += enginedata2[0];
+            textshow.innerText += " " + enginedata2[0];
             } else {
-            textshow.innerText += enginedata2[0] + ", ";
+            textshow.innerText += " " + enginedata2[0] + ",";
             }
     }
     return;
@@ -253,13 +306,24 @@ async function updatetext() {
         for (let i = 0; i < keywords.length; i++) {
             keyworddata = JSON.parse(keywords[i]);
             if (i == keywords.length - 1) {
-            textshow.innerText += keyworddata[0];
+            textshow.innerText += " " + keyworddata[0];
             } else {
-            textshow.innerText += keyworddata[0] + ", ";  
+            textshow.innerText += " " + keyworddata[0] + ",";  
             }
         }
         return;
 }
+    if (written.value == "colors") {
+        for (let i = 0; i < colors.length; i++) {
+            colordata = colors[i];
+            if (i == colors.length - 1) {
+            textshow.innerText += " " + colordata;
+            } else {
+            textshow.innerText += " " + colordata + ",";  
+            }
+        }
+        return;
+    }
 if (written.value == "help" || written.value == "help ") {
     textshow.innerText = "Specify a category that is keywords, engines or other";
 }
@@ -273,7 +337,7 @@ if (written.value == "help" || written.value == "help ") {
             return;
         }
         if (written.value.substring(5, written.value.length) == "other") {
-            textshow.innerHTML = "web [website domain] - go to a website<br>ignore [query] - search the query and ignore all commands";
+            textshow.innerHTML = "web [website domain] - go to a website<br>ignore [query] - search the query and ignore all commands<br>text/bg/output [css color name or hex code] - change the text, background or command output color<br>text/bg/output default - set the text, background or command output color to the default";
             return;
         }
         return;
