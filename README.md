@@ -28,5 +28,6 @@ Keywords and search engines have to be only one word<br>
 ``` [engine] [query] ``` - Search with the provided search engine<br>
 ``` ignore [query] ``` - Ignore any commands and just search the query<br>
 ``` text/bg/output [css color name or hex code] ``` - Change the text, background or command output color<br>
-``` text/bg/output default ``` - Set the text, background or command output color to the default
+``` text/bg/output default ``` - Set the text, background or command output color to the default<br>
+``` colors ``` - See all colors currently set
 
