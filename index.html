@@ -9,96 +9,39 @@
     <link rel="icon" id="favicon" href="favicon/1.png">
     <title>New Tab</title>
     <style>
-      html, body {
-    height: 100%; /* Make sure body takes full viewport height */
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  } 
-      body {
-        background-color: #0e0e0e;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: "Montserrat", sans-serif;
-        overflow: hidden;
-      }
-      .weather {
-        text-align: center;
-        color: white;
-        font-family: "Montserrat", sans-serif;      
-      }
-      .basiccontainer {
-        height: 30px;
-        border-radius: 15px;
-        font-size: 25px;
-        background-color: transparent;
-        padding: 7px;
-        border: 10px solid #070707;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: white;
-        padding: 20px;
-        font-family: "Montserrat", sans-serif;
-      }
-      
-      .squarecontainer {
-        height: 50px;
-        width: 50px;
-        border-radius: 15px;
-        font-size: 25px;
-        background-color: transparent;
-        padding: 7px;
-        border: 10px solid #070707;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: white;
-        padding: 20px;
-        font-family: "Montserrat", sans-serif;
-      }
-      .nothing {
-      border: none;
-      background-color: transparent;
-      color: #0e0e0e;
-      font-family: "Montserrat", sans-serif;
-      }
-.button {
-  background-color: transparent; /* Green */
-  border: none;
-  color: white;
-  text-align: center;
-  cursor: pointer;
-  text-decoration: none;
+ html, body {
+     height: 100%;
+     margin: 0;
+     padding: 0;
+     overflow: hidden;
 }
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
-    outline: none;
+ body {
+     background-color: #0e0e0e; /* Green */
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-family: "Montserrat", sans-serif;
+     overflow: hidden;
 }
-.searchengineselect {
- background-color: #1a1a1a;
- padding: 10px;
- top: 50%;
- left: 50%;
- transform: translate(-50%, -50%);
+ .contents {
+     text-align: center;
+     color: white;
+     font-family: "Montserrat", sans-serif;
 }
-.info {
-  position: absolute;
-  top: 1%;
-  left: 0.5%;
-  color: gray;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 125%;
+ .nothing {
+     border: none;
+     background-color: transparent;
+     color: #0e0e0e;
+     font-family: "Montserrat", sans-serif;
 }
+ input:focus, select:focus, textarea:focus, button:focus {
+     outline: none;
+}
+
     </style>
   </head>
   <body> 
-   <div class="weather">
+   <div class="contents">
 <div style="font-size: 150%; left: 25px;" id="textshower"></div><br>
 <div style="font-size: 150%; color: gray; left: 25px;" id="outputshower"></div>
 <input type="text" spellcheck="false" onkeypress="updatetext()" onkeyup="updatetext()" onkeydown="updatetext()" class="nothing" id="writtenstuff"></input>
@@ -145,12 +88,12 @@ written.focus();
 
 async function search() {
     if (written.value.substring(0, 7) == "ignore ") { //ignore 
-    const enginedatas = JSON.parse(engines[engine]);
-    window.location.href = enginedatas[1].replace("%s", written.value.substring(7, written.value.length));
-    return;
+        const enginedatas = JSON.parse(engines[engine]);
+        window.location.href = enginedatas[1].replace("%s", written.value.substring(7, written.value.length));
+        return;
     }
-    if (written.value.substring(0, 8) == "default ") {// default
-        for (let i = 0; i < engines.length; i++) { 
+    if (written.value.substring(0, 8) == "default ") { // default
+        for (let i = 0; i < engines.length; i++) {
             const enginedata = JSON.parse(engines[i]);
             if (written.value.substring(8, written.value.length) == enginedata[0]) {
                 localStorage.setItem("default", i);
@@ -182,7 +125,7 @@ async function search() {
         if (written.value.split(" ")[0] == enginedata[0] && written.value.split(" ").length > 1) {
             engine = i;
             for (let i = 1; i < writtennow.length; i++) {
-            query += writtennow[i] + " ";
+                query += writtennow[i] + " ";
             }
             window.location.href = enginedata[1].replace("%s", query);
             return;
@@ -229,34 +172,34 @@ async function search() {
         return;
     }
     if (written.value.substring(0, 3) == "bg ") { // bg color
-    if (written.value == "bg default") {
-    document.body.style.backgroundColor = written.value.substring(3, written.value.length);
-    written.style.color = "#0e0e0e";
-    colors[0] = "#0e0e0e"
-    localStorage.setItem("colors", JSON.stringify(colors));
-    written.value = "";
-    return; 
-    }
-    document.body.style.backgroundColor = written.value.substring(3, written.value.length);
-    written.style.color = written.value.substring(3, written.value.length);
-    colors[0] = written.value.substring(3, written.value.length); 
-    localStorage.setItem("colors", JSON.stringify(colors));
-    written.value = "";
-    return;
+        if (written.value == "bg default") {
+            document.body.style.backgroundColor = written.value.substring(3, written.value.length);
+            written.style.color = "#0e0e0e";
+            colors[0] = "#0e0e0e"
+            localStorage.setItem("colors", JSON.stringify(colors));
+            written.value = "";
+            return;
+        }
+        document.body.style.backgroundColor = written.value.substring(3, written.value.length);
+        written.style.color = written.value.substring(3, written.value.length);
+        colors[0] = written.value.substring(3, written.value.length);
+        localStorage.setItem("colors", JSON.stringify(colors));
+        written.value = "";
+        return;
     }
     if (written.value.substring(0, 5) == "text ") { // text color
-    if (written.value == "text default") {
-    document.getElementById("textshower").style.color = "white"
-    colors[1] = "white";
-    localStorage.setItem("colors", JSON.stringify(colors));
-    written.value = "";
-    return; 
-    }
-    document.getElementById("textshower").style.color = written.value.substring(5, written.value.length);
-    colors[1] = written.value.substring(5, written.value.length); 
-    localStorage.setItem("colors", JSON.stringify(colors));
-    written.value = "";
-    return;
+        if (written.value == "text default") {
+            document.getElementById("textshower").style.color = "white"
+            colors[1] = "white";
+            localStorage.setItem("colors", JSON.stringify(colors));
+            written.value = "";
+            return;
+        }
+        document.getElementById("textshower").style.color = written.value.substring(5, written.value.length);
+        colors[1] = written.value.substring(5, written.value.length);
+        localStorage.setItem("colors", JSON.stringify(colors));
+        written.value = "";
+        return;
     }
     if (written.value.substring(0, 7) == "output ") { // output color
         if (written.value == "output default") {
@@ -266,11 +209,11 @@ async function search() {
             written.value = "";
             return;
         }
-    document.getElementById("outputshower").style.color = written.value.substring(7, written.value.length);
-    colors[2] = written.value.substring(7, written.value.length); 
-    localStorage.setItem("colors", JSON.stringify(colors));
-    written.value = "";
-    return;
+        document.getElementById("outputshower").style.color = written.value.substring(7, written.value.length);
+        colors[2] = written.value.substring(7, written.value.length);
+        localStorage.setItem("colors", JSON.stringify(colors));
+        written.value = "";
+        return;
     }
     const enginedata = JSON.parse(engines[engine]);
     window.location.href = enginedata[1].replace("%s", written.value);
@@ -290,43 +233,43 @@ document.addEventListener("keydown", function(event) {
 async function updatetext() {
     document.getElementById("textshower").innerText = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart);
     document.getElementById("outputshower").innerText = "";
-  
+
     if (written.value == "engines") {
         for (let i = 0; i < engines.length; i++) {
             const enginedata2 = JSON.parse(engines[i]);
             if (i == engines.length - 1) {
-            textshow.innerText += " " + enginedata2[0];
+                textshow.innerText += " " + enginedata2[0];
             } else {
-            textshow.innerText += " " + enginedata2[0] + ",";
+                textshow.innerText += " " + enginedata2[0] + ",";
             }
+        }
+        return;
     }
-    return;
-}
     if (written.value == "keywords") {
         for (let i = 0; i < keywords.length; i++) {
             keyworddata = JSON.parse(keywords[i]);
             if (i == keywords.length - 1) {
-            textshow.innerText += " " + keyworddata[0];
+                textshow.innerText += " " + keyworddata[0];
             } else {
-            textshow.innerText += " " + keyworddata[0] + ",";  
-            }
-        }
-        return;
-}
-    if (written.value == "colors") {
-        for (let i = 0; i < colors.length; i++) {
-            colordata = colors[i];
-            if (i == colors.length - 1) {
-            textshow.innerText += " " + colordata;
-            } else {
-            textshow.innerText += " " + colordata + ",";  
+                textshow.innerText += " " + keyworddata[0] + ",";
             }
         }
         return;
     }
-if (written.value == "help" || written.value == "help ") {
-    textshow.innerText = "Specify a category that is keywords, engines or other";
-}
+    if (written.value == "colors") {
+        for (let i = 0; i < colors.length; i++) {
+            colordata = colors[i];
+            if (i == colors.length - 1) {
+                textshow.innerText += " " + colordata;
+            } else {
+                textshow.innerText += " " + colordata + ",";
+            }
+        }
+        return;
+    }
+    if (written.value == "help" || written.value == "help ") {
+        textshow.innerText = "Specify a category that is keywords, engines, colors or other";
+    }
     if (written.value.substring(0, 5) == "help ") {
         if (written.value.substring(5, written.value.length) == "keywords") {
             textshow.innerHTML = "add keyword [keyword] [link] - add a keyword<br>remove keyword [keyword] - remove a keyword<br>keywords - see all available keywords<br>[keyword] - use a keyword";
@@ -336,12 +279,20 @@ if (written.value == "help" || written.value == "help ") {
             textshow.innerHTML = "add engine [search engine] [link with %s in place of the query] - add a search engine<br>remove engine [search engine] - remove a search engine<br>default [engine] - set your default search engine<br>[engine] [query] - search with a search engine<br>[engine] - switch your current search engine<br>engines - see all available search engines";
             return;
         }
-        if (written.value.substring(5, written.value.length) == "other") {
-            textshow.innerHTML = "web [website domain] - go to a website<br>ignore [query] - search the query and ignore all commands<br>text/bg/output [css color name or hex code] - change the text, background or command output color<br>text/bg/output default - set the text, background or command output color to the default";
+        if (written.value.substring(5, written.value.length) == "colors") {
+            textshow.innerHTML = "text/bg/output [css color name or hex code] - change the text, background or command output color<br>text/bg/output default - set the text, background or command output color to the default<br>colors - see all set colors";
             return;
         }
+        if (written.value.substring(5, written.value.length) == "other") {
+            textshow.innerHTML = "web [website domain] - go to a website<br>ignore [query] - search the query and ignore all commands";
+            return;
+        } else {
+            if (written.value != "help ") {
+            textshow.innerText = "Category doesn't exist"
+            }
+        }
         return;
-}
+    }
 }
 const favicon = document.getElementById("favicon");
 async function insertcursor() {
@@ -353,13 +304,14 @@ async function insertcursor() {
     document.getElementById("textshower").innerText = written.value;
     setTimeout(insertcursor, 500);
 }
-     function nextframe() {
-        if (favicon.href.endsWith("favicon/1.png")) {
-            favicon.href = "favicon/2.png";
-        } else {
-            favicon.href = "favicon/1.png";
-        }
+
+function nextframe() {
+    if (favicon.href.endsWith("favicon/1.png")) {
+        favicon.href = "favicon/2.png";
+    } else {
+        favicon.href = "favicon/1.png";
     }
+}
 insertcursor();
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -367,6 +319,71 @@ const query = urlParams.get("q");
 if (query != null) {
     written.value = urlParams.get("q");
     search();
+}
+
+async function testcommands() {
+    written.value = "help";
+    updatetext();
+    await sleep(500);
+    written.value = "help keywords";
+    updatetext();
+    await sleep(500);
+    written.value = "help engines";
+    updatetext();
+    await sleep(500);
+    written.value = "help other";
+    updatetext();
+    await sleep(500);
+    written.value = "engines";
+    updatetext();
+    await sleep(500);
+    written.value = "keywords";
+    updatetext();
+    await sleep(500);
+    written.value = "colors";
+    updatetext();
+    await sleep(500);
+    written.value = "add keyword test";
+    updatetext();
+    search();
+    if (JSON.stringify(keywords).includes("test") == false) {
+        document.getElementById("outputshower").innerText = "Failed";
+        return;
+    } else {
+        document.getElementById("outputshower").innerText = "Success";
+    }
+    await sleep(500);
+    written.value = "remove keyword test";
+    updatetext();
+    search();
+    if (JSON.stringify(keywords).includes("test")) {
+        document.getElementById("outputshower").innerText = "Failed";
+        return;
+    } else {
+        document.getElementById("outputshower").innerText = "Success";
+    }
+    await sleep(500);
+    written.value = "add engine test";
+    updatetext();
+    search();
+    if (JSON.stringify(engines).includes("test") == false) {
+        document.getElementById("outputshower").innerText = "Failed";
+        return;
+    } else {
+        document.getElementById("outputshower").innerText = "Success";
+    }
+    await sleep(500);
+    written.value = "remove engine test";
+    updatetext();
+    search();
+    if (JSON.stringify(engines).includes("test")) {
+        document.getElementById("outputshower").innerText = "Failed";
+        return;
+    } else {
+        document.getElementById("outputshower").innerText = "Success";
+    }
+    await sleep(1000);
+    document.getElementById("outputshower").innerText = "";
 }
     </script>
   </body>
