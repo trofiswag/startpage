@@ -19,16 +19,17 @@ Keywords and search engines have to be only one word<br>
 ``` help [category] ``` - See all commands nicely categorized (categories are keywords, engines and other)<br>
 ``` add keyword [keyword] [link with a protocol] ``` - Add a keyword that takes you to a link <br>
 ``` remove keyword [keyword] ``` - Remove a keyword<br>
-``` keywords ``` - See all available keywords<br>
+``` keywords (or k) ``` - See all available keywords<br>
 ``` add engine [engine] [link] ``` - Add a search engine<br>
 ``` remove engine [engine] ``` - Remove a search engine<br>
-``` engines ``` - See all available engines<br>
+``` engines (or e) ``` - See all available engines<br>
 ``` web [link without a protocol] ``` - Go to a website<br>
 ``` default [engine] ``` - See all available keywords<br>
 ``` [engine] ``` - Switch the current search engine being used<br>
 ``` [engine] [query] ``` - Search with the provided search engine<br>
-``` ignore [query] ``` - Ignore any commands and just search the query<br>
+``` ignore (or i) [query] ``` - Ignore any commands and just search the query<br>
 ``` text/bg/output [css color name or hex code] ``` - Change the text, background or command output color<br>
 ``` text/bg/output default ``` - Set the text, background or command output color to the default<br>
-``` colors ``` - See all colors currently set
+``` colors (or c) ``` - See all colors currently set
+``` permoutput [command] ``` - change what is shown on the permanent output (must be a command that gives an output, write just permoutput to show nothing)
 
