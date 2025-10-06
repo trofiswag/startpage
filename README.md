@@ -30,6 +30,6 @@ Keywords and search engines have to be only one word<br>
 ``` ignore (or i) [query] ``` - Ignore any commands and just search the query<br>
 ``` text/bg/output [css color name or hex code] ``` - Change the text, background or command output color<br>
 ``` text/bg/output default ``` - Set the text, background or command output color to the default<br>
-``` colors (or c) ``` - See all colors currently set
+``` colors (or c) ``` - See all colors currently set<br>
 ``` permoutput [command] ``` - change what is shown on the permanent output (must be a command that gives an output, write just permoutput to show nothing)
 
