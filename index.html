@@ -37,16 +37,26 @@
  input:focus, select:focus, textarea:focus, button:focus {
      outline: none;
 }
+.permoutput {
+    font-size: 150%; 
+    color: gray; 
+    left: 25px;
+    position: absolute;
+    left: 30%;
+    top: 30%;
+}
 
     </style>
   </head>
-  <body> 
+  <body>
    <div class="contents">
+<div style="font-size: 150%; color: gray; left: 25px;" id="permoutputshower"></div><br>
 <div style="font-size: 150%; left: 25px;" id="textshower"></div><br>
 <div style="font-size: 150%; color: gray; left: 25px;" id="outputshower"></div>
 <input type="text" spellcheck="false" onkeypress="updatetext()" onkeyup="updatetext()" onkeydown="updatetext()" class="nothing" id="writtenstuff"></input>
     </div>
     <script>
+// can anyone that forked this tell me whether this code is bad because i am not good at this
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -72,11 +82,20 @@ if (localStorage.colors == undefined) {
     const colors = ["#0e0e0e", "white", "gray"];
     localStorage.setItem("colors", JSON.stringify(colors));
 }
+if (localStorage.permoutput == undefined) {
+    localStorage.setItem("permoutput", "")
+}
 document.addEventListener("visibilitychange", function() {
     written.value = "";
     document.getElementById("textshower").innerText = "";
     textshow.innerHTML = "";
+    if (written.value == "") {
+    written.value = "‎";
+}
 });
+if (written.value == "") {
+    written.value = "‎";
+}
 const engines = JSON.parse(localStorage.engines);
 const keywords = JSON.parse(localStorage.keywords);
 const colors = JSON.parse(localStorage.colors);
@@ -84,12 +103,32 @@ written.style.color = colors[0];
 document.body.style.backgroundColor = colors[0];
 document.getElementById("textshower").style.color = colors[1];
 document.getElementById("outputshower").style.color = colors[2];
+document.getElementById("permoutputshower").style.color = colors[2];
+document.addEventListener("onclick", function() {
+    written.focus();
+})
 written.focus();
+function resetpermoutput() {
+if (localStorage.permoutput != "nothing") {
+    document.getElementById("permoutputshower").innerHTML = "";
+    checkforoutputcommand(localStorage.permoutput, document.getElementById("permoutputshower"));
+} else {
+    document.getElementById("permoutputshower").innerHTML = "";
+}
+}
+resetpermoutput();
 
 async function search() {
-    if (written.value.substring(0, 7) == "ignore ") { //ignore 
+    if (written.value.substring(0, 1) == "‎" || written.value.substring(0, 1) == " ") { // this fixes a problem with commands not registering for the first time
+        written.value = written.value.substring(1, written.value.length);
+    }
+    if (written.value.substring(0, 7) == "ignore " || written.value.substring(0, 2) == "i ") { //ignore 
         const enginedatas = JSON.parse(engines[engine]);
-        window.location.href = enginedatas[1].replace("%s", written.value.substring(7, written.value.length));
+        if (written.value.substring(0, 7) == "ignore ") {
+            window.location.href = enginedatas[1].replace("%s", written.value.substring(7, written.value.length));
+        } else {
+            window.location.href = enginedatas[1].replace("%s", written.value.substring(2, written.value.length));
+        }
         return;
     }
     if (written.value.substring(0, 8) == "default ") { // default
@@ -127,14 +166,26 @@ async function search() {
             for (let i = 1; i < writtennow.length; i++) {
                 query += writtennow[i] + " ";
             }
-            window.location.href = enginedata[1].replace("%s", query);
+            window.location.href = enginedata[1].replace("%s", query.substring(0, query.length - 1));
             return;
         }
     }
+    if (written.value == "permoutput") {
+        written.value = "";
+        localStorage.setItem("permoutput", "nothing");
+        resetpermoutput();
+        return;
+    }
+    if (written.value.substring(0, 11) == "permoutput ") { // change perm output
+        localStorage.setItem("permoutput", written.value.substring(11, written.value.length));
+        resetpermoutput();
+        written.value = "";
+        return;
+    }
     if (written.value.substring(0, 12) == "add keyword ") { // add keyword
-        written.selectionStart
         keywords.push(JSON.stringify(written.value.substring(12, written.value.length).split(" ")));
         localStorage.setItem("keywords", JSON.stringify(keywords));
+        resetpermoutput();
         written.value = "";
         return;
     }
@@ -144,6 +195,7 @@ async function search() {
             if (keyworddata.includes(written.value.substring(15, written.value.length))) {
                 keywords.splice(i, 1);
                 written.value = "";
+                resetpermoutput();
                 localStorage.setItem("keywords", JSON.stringify(keywords));
                 return;
             }
@@ -153,6 +205,7 @@ async function search() {
         for (let i = 0; i < engines.length; i++) {
             const enginedata = JSON.parse(engines[i]);
             if (enginedata.includes(written.value.substring(14, written.value.length))) {
+                resetpermoutput();
                 engines.splice(i, 1);
                 written.value = "";
                 localStorage.setItem("engines", JSON.stringify(engines));
@@ -163,6 +216,7 @@ async function search() {
     if (written.value.substring(0, 11) == "add engine ") { // add engine
         engines.push(JSON.stringify(written.value.substring(11, written.value.length).split(" ")));
         localStorage.setItem("engines", JSON.stringify(engines));
+        resetpermoutput();
         written.value = "";
         return;
     }
@@ -172,6 +226,7 @@ async function search() {
         return;
     }
     if (written.value.substring(0, 3) == "bg ") { // bg color
+        resetpermoutput();
         if (written.value == "bg default") {
             document.body.style.backgroundColor = written.value.substring(3, written.value.length);
             written.style.color = "#0e0e0e";
@@ -188,6 +243,7 @@ async function search() {
         return;
     }
     if (written.value.substring(0, 5) == "text ") { // text color
+        resetpermoutput();
         if (written.value == "text default") {
             document.getElementById("textshower").style.color = "white"
             colors[1] = "white";
@@ -202,6 +258,7 @@ async function search() {
         return;
     }
     if (written.value.substring(0, 7) == "output ") { // output color
+        resetpermoutput();
         if (written.value == "output default") {
             document.getElementById("outputshower").style.color = "gray";
             colors[2] = "gray";
@@ -215,6 +272,7 @@ async function search() {
         written.value = "";
         return;
     }
+    // fallback if no commands
     const enginedata = JSON.parse(engines[engine]);
     window.location.href = enginedata[1].replace("%s", written.value);
 }
@@ -230,69 +288,78 @@ document.addEventListener("keydown", function(event) {
         return;
     }
 });
-async function updatetext() {
-    document.getElementById("textshower").innerText = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart);
-    document.getElementById("outputshower").innerText = "";
 
-    if (written.value == "engines") {
+function checkforoutputcommand(input, output) {
+    if (input.substring(0, 1) == "‎" || input.substring(0, 1) == " ") { // same thing as in the search command
+        input = input.substring(1, input.length)
+    }
+    if (input == "engines" || input == "e") {
         for (let i = 0; i < engines.length; i++) {
             const enginedata2 = JSON.parse(engines[i]);
             if (i == engines.length - 1) {
-                textshow.innerText += " " + enginedata2[0];
+                output.innerHTML += " " + enginedata2[0];
             } else {
-                textshow.innerText += " " + enginedata2[0] + ",";
+                output.innerHTML += " " + enginedata2[0] + ",";
             }
         }
         return;
     }
-    if (written.value == "keywords") {
+    if (input == "keywords" || input == "k") {
         for (let i = 0; i < keywords.length; i++) {
             keyworddata = JSON.parse(keywords[i]);
             if (i == keywords.length - 1) {
-                textshow.innerText += " " + keyworddata[0];
+                output.innerHTML += " " + keyworddata[0];
             } else {
-                textshow.innerText += " " + keyworddata[0] + ",";
+                output.innerHTML += " " + keyworddata[0] + ",";
             }
         }
         return;
     }
-    if (written.value == "colors") {
+    if (input == "colors" || input == "c") {
         for (let i = 0; i < colors.length; i++) {
             colordata = colors[i];
             if (i == colors.length - 1) {
-                textshow.innerText += " " + colordata;
+                output.innerHTML += " " + colordata;
             } else {
-                textshow.innerText += " " + colordata + ",";
+                output.innerHTML += " " + colordata + ",";
             }
         }
         return;
     }
-    if (written.value == "help" || written.value == "help ") {
-        textshow.innerText = "Specify a category that is keywords, engines, colors or other";
+    if (input == "help" || input == "help ") {
+        output.innerHTML = "Specify a category that is keywords, engines, colors or other";
     }
-    if (written.value.substring(0, 5) == "help ") {
-        if (written.value.substring(5, written.value.length) == "keywords") {
-            textshow.innerHTML = "add keyword [keyword] [link] - add a keyword<br>remove keyword [keyword] - remove a keyword<br>keywords - see all available keywords<br>[keyword] - use a keyword";
+    if (input.substring(0, 5) == "help ") {
+        const substring = input.substring(5, input.length)
+        if (substring == "keywords") {
+            output.innerHTML = "add keyword [keyword] [link] - add a keyword<br>remove keyword [keyword] - remove a keyword<br>keywords (or e) - see all available keywords<br>[keyword] - use a keyword";
             return;
         }
-        if (written.value.substring(5, written.value.length) == "engines") {
-            textshow.innerHTML = "add engine [search engine] [link with %s in place of the query] - add a search engine<br>remove engine [search engine] - remove a search engine<br>default [engine] - set your default search engine<br>[engine] [query] - search with a search engine<br>[engine] - switch your current search engine<br>engines - see all available search engines";
+        if (substring == "engines") {
+            output.innerHTML = "add engine [search engine] [link with %s in place of the query] - add a search engine<br>remove engine [search engine] - remove a search engine<br>default [engine] - set your default search engine<br>[engine] [query] - search with a search engine<br>[engine] - switch your current search engine<br>engines (or e) - see all available search engines";
             return;
         }
-        if (written.value.substring(5, written.value.length) == "colors") {
-            textshow.innerHTML = "text/bg/output [css color name or hex code] - change the text, background or command output color<br>text/bg/output default - set the text, background or command output color to the default<br>colors - see all set colors";
+        if (substring == "colors") {
+            output.innerHTML = "text/bg/output [css color name or hex code] - change the text, background or command output color<br>text/bg/output default - set the text, background or command output color to the default<br>colors (or c) - see all set colors";
             return;
         }
-        if (written.value.substring(5, written.value.length) == "other") {
-            textshow.innerHTML = "web [website domain] - go to a website<br>ignore [query] - search the query and ignore all commands";
+        if (substring == "other") {
+            output.innerHTML = "web [website domain] - go to a website<br>ignore (or i) [query] - search the query and ignore all commands<br>permoutput [command] - change what is shown on the permanent output (must be a command that gives an output, write just permoutput to show nothing)";
             return;
         } else {
-            if (written.value != "help ") {
-            textshow.innerText = "Category doesn't exist"
+            if (input != "help ") {
+                output.innerHTML = "Category doesn't exist"
             }
         }
-        return;
     }
+}
+async function updatetext() {
+    document.getElementById("textshower").innerText = written.value.slice(0, written.selectionStart) + "|" + written.value.slice(written.selectionStart);
+    document.getElementById("outputshower").innerText = "";
+    if (written.value == "") {
+    written.value = "‎";
+}
+    checkforoutputcommand(written.value, document.getElementById("outputshower"));
 }
 const favicon = document.getElementById("favicon");
 async function insertcursor() {
