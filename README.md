@@ -19,9 +19,11 @@ Keywords and search engines have to be only one word<br>
 ``` help [category] ``` - See all commands nicely categorized (categories are keywords, engines and other)<br>
 ``` add keyword [keyword] [link with a protocol] ``` - Add a keyword that takes you to a link <br>
 ``` remove keyword [keyword] ``` - Remove a keyword<br>
+``` edit keyword [keyword] [link with a protocol] ``` - Edit a keyword<br>
 ``` keywords (or k) ``` - See all available keywords<br>
-``` add engine [engine] [link] ``` - Add a search engine<br>
+``` add engine [engine] [link with a %s in place of the query] ``` - Add a search engine<br>
 ``` remove engine [engine] ``` - Remove a search engine<br>
+``` edit engine [engine] [link with a %s in place of the query] ``` - Edit a search engine<br>
 ``` engines (or e) ``` - See all available engines<br>
 ``` web [link without a protocol] ``` - Go to a website<br>
 ``` default [engine] ``` - See all available keywords<br>

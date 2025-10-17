@@ -86,12 +86,9 @@ if (localStorage.permoutput == undefined) {
     localStorage.setItem("permoutput", "")
 }
 document.addEventListener("visibilitychange", function() {
-    written.value = "";
+    written.value = "‎";
     document.getElementById("textshower").innerText = "";
     textshow.innerHTML = "";
-    if (written.value == "") {
-    written.value = "‎";
-}
 });
 if (written.value == "") {
     written.value = "‎";
@@ -201,6 +198,15 @@ async function search() {
             }
         }
     }
+    if (written.value.substring(0, 13) == "edit keyword ") { // edit keyword
+        let data = written.value.substring(13, written.value.length).split(" ")
+        written.value = "remove keyword " + data[0]
+        search();
+        await sleep(10);
+        written.value = "add keyword " + data[0] + " " + data[1]
+        search();
+        return;
+    }
     if (written.value.substring(0, 14) == "remove engine ") { // remove engine
         for (let i = 0; i < engines.length; i++) {
             const enginedata = JSON.parse(engines[i]);
@@ -218,6 +224,15 @@ async function search() {
         localStorage.setItem("engines", JSON.stringify(engines));
         resetpermoutput();
         written.value = "";
+        return;
+    }
+    if (written.value.substring(0, 12) == "edit engine ") { // edit keyword
+        let data = written.value.substring(12, written.value.length).split(" ")
+        written.value = "remove engine " + data[0]
+        search();
+        await sleep(10);
+        written.value = "add engine " + data[0] + " " + data[1]
+        search();
         return;
     }
     if (written.value.substring(0, 4) == "web ") { // web
@@ -332,11 +347,11 @@ function checkforoutputcommand(input, output) {
     if (input.substring(0, 5) == "help ") {
         const substring = input.substring(5, input.length)
         if (substring == "keywords") {
-            output.innerHTML = "add keyword [keyword] [link] - add a keyword<br>remove keyword [keyword] - remove a keyword<br>keywords (or e) - see all available keywords<br>[keyword] - use a keyword";
+            output.innerHTML = "add keyword [keyword] [link] - add a keyword<br>remove keyword [keyword] - remove a keyword<br>edit keyword [keyword] [link] - edit a keyword<br>keywords (or e) - see all available keywords<br>[keyword] - use a keyword";
             return;
         }
         if (substring == "engines") {
-            output.innerHTML = "add engine [search engine] [link with %s in place of the query] - add a search engine<br>remove engine [search engine] - remove a search engine<br>default [engine] - set your default search engine<br>[engine] [query] - search with a search engine<br>[engine] - switch your current search engine<br>engines (or e) - see all available search engines";
+            output.innerHTML = "add engine [search engine] [link with %s in place of the query] - add a search engine<br>remove engine [search engine] - remove a search engine<br>edit engine [search engine] [link with %s in place of the query] - edit an engine<br>default [engine] - set your default search engine<br>[engine] [query] - search with a search engine<br>[engine] - switch your current search engine<br>engines (or e) - see all available search engines";
             return;
         }
         if (substring == "colors") {
@@ -363,21 +378,14 @@ async function updatetext() {
 }
 const favicon = document.getElementById("favicon");
 async function insertcursor() {
-    nextframe();
     const cursorposition = written.selectionStart;
     document.getElementById("textshower").innerText = written.value.slice(0, cursorposition) + "|" + written.value.slice(cursorposition);
-    await sleep(500);
-    nextframe();
+    favicon.href = "favicon/1.png";
+    await sleep(450);
+    favicon.href = "favicon/2.png";
+    await sleep(50)
     document.getElementById("textshower").innerText = written.value;
-    setTimeout(insertcursor, 500);
-}
-
-function nextframe() {
-    if (favicon.href.endsWith("favicon/1.png")) {
-        favicon.href = "favicon/2.png";
-    } else {
-        favicon.href = "favicon/1.png";
-    }
+    setTimeout(insertcursor, 450);
 }
 insertcursor();
 const queryString = window.location.search;
@@ -386,6 +394,7 @@ const query = urlParams.get("q");
 if (query != null) {
     written.value = urlParams.get("q");
     search();
+    written.value = "‎";
 }
 
 async function testcommands() {
@@ -414,40 +423,40 @@ async function testcommands() {
     updatetext();
     search();
     if (JSON.stringify(keywords).includes("test") == false) {
-        document.getElementById("outputshower").innerText = "Failed";
+        document.getElementById("outputshower").innerText = "Failed add keyword";
         return;
     } else {
-        document.getElementById("outputshower").innerText = "Success";
+        document.getElementById("outputshower").innerText = "Add keyword success";
     }
     await sleep(500);
     written.value = "remove keyword test";
     updatetext();
     search();
     if (JSON.stringify(keywords).includes("test")) {
-        document.getElementById("outputshower").innerText = "Failed";
+        document.getElementById("outputshower").innerText = "Failed remove keyword";
         return;
     } else {
-        document.getElementById("outputshower").innerText = "Success";
+        document.getElementById("outputshower").innerText = "Remove keyword success";
     }
     await sleep(500);
     written.value = "add engine test";
     updatetext();
     search();
     if (JSON.stringify(engines).includes("test") == false) {
-        document.getElementById("outputshower").innerText = "Failed";
+        document.getElementById("outputshower").innerText = "Failed add engine";
         return;
     } else {
-        document.getElementById("outputshower").innerText = "Success";
+        document.getElementById("outputshower").innerText = "Add engine success";
     }
     await sleep(500);
     written.value = "remove engine test";
     updatetext();
     search();
     if (JSON.stringify(engines).includes("test")) {
-        document.getElementById("outputshower").innerText = "Failed";
+        document.getElementById("outputshower").innerText = "Failed remove engine";
         return;
     } else {
-        document.getElementById("outputshower").innerText = "Success";
+        document.getElementById("outputshower").innerText = "Remove engine success";
     }
     await sleep(1000);
     document.getElementById("outputshower").innerText = "";
